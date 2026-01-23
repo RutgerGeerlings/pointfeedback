@@ -412,10 +412,10 @@ const handler = createFeedbackHandler(storage);
 export const { GET, POST, PUT, DELETE } = handler;
 ```
 
+## Inspired By
+
+Visual feedback and annotation systems used by WeTransfer Review, Fiverr, Ruttl, Markup.io, and InVision. These platforms pioneered click-to-comment workflows that make design collaboration intuitive and efficient.
+
 ## License
 
 MIT © Rutger Geerlings
-
----
-
-Made with ❤️ for better design collaboration
