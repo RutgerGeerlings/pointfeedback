@@ -15,6 +15,16 @@ export interface FeedbackPoint {
   resolution?: string;
 }
 
+export interface GeneralFeedback {
+  id: string;
+  comment: string;
+  page: string;
+  timestamp: string;
+  resolved?: boolean;
+  resolution?: string;
+  author?: string;
+}
+
 export interface FeedbackRound {
   id: string;
   name: string;
@@ -29,6 +39,9 @@ export interface StorageAdapter {
   deleteFeedback(id: string): Promise<boolean>;
   updateFeedback(id: string, updates: Partial<FeedbackPoint>): Promise<FeedbackPoint | null>;
   getRounds(page?: string): Promise<FeedbackRound[]>;
+  getGeneralFeedback?(page?: string): Promise<GeneralFeedback[]>;
+  saveGeneralFeedback?(feedback: GeneralFeedback): Promise<GeneralFeedback>;
+  deleteGeneralFeedback?(id: string): Promise<boolean>;
 }
 
 // ============================================================================
@@ -37,6 +50,7 @@ export interface StorageAdapter {
 
 let inMemoryFeedback: FeedbackPoint[] = [];
 let inMemoryRounds: FeedbackRound[] = [];
+let inMemoryGeneralFeedback: GeneralFeedback[] = [];
 
 export const memoryStorage: StorageAdapter = {
   async getFeedback(page?: string) {
@@ -73,6 +87,25 @@ export const memoryStorage: StorageAdapter = {
       }));
     }
     return inMemoryRounds;
+  },
+
+  async getGeneralFeedback(page?: string) {
+    if (page) {
+      return inMemoryGeneralFeedback.filter((f) => f.page === page);
+    }
+    return inMemoryGeneralFeedback;
+  },
+
+  async saveGeneralFeedback(feedback: GeneralFeedback) {
+    inMemoryGeneralFeedback.unshift(feedback);
+    return feedback;
+  },
+
+  async deleteGeneralFeedback(id: string) {
+    const index = inMemoryGeneralFeedback.findIndex((f) => f.id === id);
+    if (index === -1) return false;
+    inMemoryGeneralFeedback.splice(index, 1);
+    return true;
   },
 };
 
@@ -231,9 +264,118 @@ export function createRoundsHandler(storage: StorageAdapter = memoryStorage) {
   };
 }
 
+export function createGeneralFeedbackHandler(storage: StorageAdapter = memoryStorage) {
+  return {
+    async GET(request: NextRequest) {
+      try {
+        const { searchParams } = new URL(request.url);
+        const page = searchParams.get("page") || undefined;
+
+        if (!storage.getGeneralFeedback) {
+          return NextResponse.json({ feedback: [], count: 0 });
+        }
+
+        const feedback = await storage.getGeneralFeedback(page);
+
+        return NextResponse.json({
+          feedback,
+          count: feedback.length,
+        });
+      } catch (error) {
+        console.error("[PointFeedback] General feedback GET error:", error);
+        return NextResponse.json(
+          { error: "Failed to fetch general feedback" },
+          { status: 500 }
+        );
+      }
+    },
+
+    async POST(request: NextRequest) {
+      try {
+        const body = await request.json();
+
+        if (!body.page || !body.comment) {
+          return NextResponse.json(
+            { error: "Missing required fields: page, comment" },
+            { status: 400 }
+          );
+        }
+
+        if (!storage.saveGeneralFeedback) {
+          return NextResponse.json(
+            { error: "General feedback storage not configured" },
+            { status: 501 }
+          );
+        }
+
+        const feedback: GeneralFeedback = {
+          id: body.id || `gf_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+          comment: body.comment,
+          page: body.page,
+          timestamp: body.timestamp || new Date().toISOString(),
+          resolved: body.resolved || false,
+          author: body.author || undefined,
+        };
+
+        const saved = await storage.saveGeneralFeedback(feedback);
+
+        return NextResponse.json({
+          success: true,
+          feedback: saved,
+        });
+      } catch (error) {
+        console.error("[PointFeedback] General feedback POST error:", error);
+        return NextResponse.json(
+          { error: "Failed to save general feedback" },
+          { status: 500 }
+        );
+      }
+    },
+
+    async DELETE(request: NextRequest) {
+      try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get("id");
+
+        if (!id) {
+          return NextResponse.json(
+            { error: "Missing id parameter" },
+            { status: 400 }
+          );
+        }
+
+        if (!storage.deleteGeneralFeedback) {
+          return NextResponse.json(
+            { error: "General feedback storage not configured" },
+            { status: 501 }
+          );
+        }
+
+        const deleted = await storage.deleteGeneralFeedback(id);
+
+        if (!deleted) {
+          return NextResponse.json(
+            { error: "Feedback not found" },
+            { status: 404 }
+          );
+        }
+
+        return NextResponse.json({ success: true });
+      } catch (error) {
+        console.error("[PointFeedback] General feedback DELETE error:", error);
+        return NextResponse.json(
+          { error: "Failed to delete general feedback" },
+          { status: 500 }
+        );
+      }
+    },
+  };
+}
+
 // ============================================================================
 // Pre-configured handlers with memory storage
 // ============================================================================
 
 export const feedbackHandler = createFeedbackHandler();
 export const roundsHandler = createRoundsHandler();
+export const generalFeedbackHandler = createGeneralFeedbackHandler();

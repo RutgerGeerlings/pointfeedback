@@ -7,6 +7,7 @@ A beautiful, zero-dependency visual feedback widget for Next.js applications. Le
 ## Features
 
 - **Click-to-Pin**: Click anywhere to place a feedback marker at that exact position
+- **General Feedback**: Collect non-pinned feedback through a simple list interface
 - **Visual Markers**: Color-coded pins show feedback status (new, resolved, in-progress)
 - **Hover Tooltips**: See feedback details by hovering over any marker
 - **Feedback Rounds**: Organize feedback into rounds for design reviews, QA cycles, etc.
@@ -18,11 +19,11 @@ A beautiful, zero-dependency visual feedback widget for Next.js applications. Le
 ## Installation
 
 ```bash
-npm install point-feedback
+npm install pointfeedback
 # or
-yarn add point-feedback
+yarn add pointfeedback
 # or
-pnpm add point-feedback
+pnpm add pointfeedback
 ```
 
 ## Quick Start
@@ -31,7 +32,7 @@ pnpm add point-feedback
 
 ```tsx
 // app/layout.tsx
-import { FeedbackWidget } from "point-feedback";
+import { FeedbackWidget } from "pointfeedback";
 
 export default function RootLayout({ children }) {
   return (
@@ -45,11 +46,11 @@ export default function RootLayout({ children }) {
 }
 ```
 
-### 2. Create the API Route
+### 2. Create the API Routes
 
 ```ts
 // app/api/feedback/route.ts
-import { feedbackHandler } from "point-feedback/api";
+import { feedbackHandler } from "pointfeedback/api";
 
 export const GET = feedbackHandler.GET;
 export const POST = feedbackHandler.POST;
@@ -57,7 +58,16 @@ export const PUT = feedbackHandler.PUT;
 export const DELETE = feedbackHandler.DELETE;
 ```
 
-That's it! You now have a working feedback system.
+```ts
+// app/api/feedback/general/route.ts (optional - for general feedback)
+import { generalFeedbackHandler } from "pointfeedback/api";
+
+export const GET = generalFeedbackHandler.GET;
+export const POST = generalFeedbackHandler.POST;
+export const DELETE = generalFeedbackHandler.DELETE;
+```
+
+That's it! You now have a working feedback system with both pinned and general feedback.
 
 ## Configuration
 
@@ -68,6 +78,7 @@ That's it! You now have a working feedback system.
   // API endpoints
   apiEndpoint="/api/feedback"
   roundsEndpoint="/api/feedback/rounds"
+  generalFeedbackEndpoint="/api/feedback/general"
 
   // Position: "bottom-left" | "bottom-right" | "top-left" | "top-right"
   position="bottom-left"
@@ -97,10 +108,17 @@ That's it! You now have a working feedback system.
     rounds: "Feedback Rounds",
     noRounds: "No rounds found",
     viewAll: "View all feedback",
+    generalFeedback: "General Feedback",
+    noGeneralFeedback: "No general feedback yet",
+    addGeneralFeedback: "Add Feedback",
+    generalPlaceholder: "Share your thoughts...",
   }}
 
   // Show/hide rounds button
   showRoundsButton={true}
+
+  // Show/hide general feedback button
+  showGeneralFeedback={true}
 
   // Link to feedback overview page (null to hide button)
   feedbackPageUrl="/feedback"
@@ -114,6 +132,7 @@ That's it! You now have a working feedback system.
   // Callbacks
   onFeedbackAdd={(feedback) => console.log("Added:", feedback)}
   onFeedbackDelete={(id) => console.log("Deleted:", id)}
+  onGeneralFeedbackAdd={(feedback) => console.log("General:", feedback)}
 />
 ```
 
@@ -140,7 +159,7 @@ That's it! You now have a working feedback system.
 Perfect for development and testing. Data is lost on server restart.
 
 ```ts
-import { feedbackHandler } from "point-feedback/api";
+import { feedbackHandler } from "pointfeedback/api";
 
 export const GET = feedbackHandler.GET;
 export const POST = feedbackHandler.POST;
@@ -151,7 +170,7 @@ export const POST = feedbackHandler.POST;
 Stores feedback in JSON files on the local filesystem.
 
 ```ts
-import { createFeedbackHandler, createFileStorage } from "point-feedback/api";
+import { createFeedbackHandler, createFileStorage } from "pointfeedback/api";
 
 const storage = createFileStorage({
   feedbackDir: "./data/feedback",
@@ -175,7 +194,7 @@ npm install @vercel/blob
 ```
 
 ```ts
-import { createFeedbackHandler, createVercelBlobStorage } from "point-feedback/api";
+import { createFeedbackHandler, createVercelBlobStorage } from "pointfeedback/api";
 
 const storage = createVercelBlobStorage({
   feedbackPrefix: "feedback",
@@ -195,7 +214,7 @@ export const DELETE = handler.DELETE;
 Implement the `StorageAdapter` interface for your own storage solution:
 
 ```ts
-import { createFeedbackHandler, type StorageAdapter } from "point-feedback/api";
+import { createFeedbackHandler, type StorageAdapter } from "pointfeedback/api";
 
 const myStorage: StorageAdapter = {
   async getFeedback(page?: string) {
@@ -257,7 +276,7 @@ Create a JSON file in your rounds directory:
 
 ```ts
 // app/api/feedback/rounds/route.ts
-import { roundsHandler } from "point-feedback/api";
+import { roundsHandler } from "pointfeedback/api";
 
 export const GET = roundsHandler.GET;
 ```
@@ -339,9 +358,9 @@ import type {
   FeedbackWidgetConfig,
   FeedbackPoint,
   FeedbackRound,
-} from "point-feedback";
+} from "pointfeedback";
 
-import type { StorageAdapter } from "point-feedback/api";
+import type { StorageAdapter } from "pointfeedback/api";
 ```
 
 ## Examples
@@ -350,7 +369,7 @@ import type { StorageAdapter } from "point-feedback/api";
 
 ```tsx
 // app/layout.tsx
-import { FeedbackWidget } from "point-feedback";
+import { FeedbackWidget } from "pointfeedback";
 
 export default function Layout({ children }) {
   return (
@@ -366,7 +385,7 @@ export default function Layout({ children }) {
 
 ```ts
 // app/api/feedback/route.ts
-import { feedbackHandler } from "point-feedback/api";
+import { feedbackHandler } from "pointfeedback/api";
 export const { GET, POST, PUT, DELETE } = feedbackHandler;
 ```
 
@@ -374,7 +393,7 @@ export const { GET, POST, PUT, DELETE } = feedbackHandler;
 
 ```tsx
 // app/layout.tsx
-import { FeedbackWidget } from "point-feedback";
+import { FeedbackWidget } from "pointfeedback";
 import { auth } from "@/lib/auth";
 
 export default async function Layout({ children }) {
@@ -404,7 +423,7 @@ export default async function Layout({ children }) {
 
 ```ts
 // app/api/feedback/route.ts
-import { createFeedbackHandler, createVercelBlobStorage } from "point-feedback/api";
+import { createFeedbackHandler, createVercelBlobStorage } from "pointfeedback/api";
 
 const storage = createVercelBlobStorage();
 const handler = createFeedbackHandler(storage);

@@ -18,6 +18,16 @@ export interface FeedbackPoint {
   resolution?: string;
 }
 
+export interface GeneralFeedback {
+  id: string;
+  comment: string;
+  page: string;
+  timestamp: string;
+  resolved?: boolean;
+  resolution?: string;
+  author?: string;
+}
+
 export interface FeedbackRound {
   id: string;
   name: string;
@@ -31,6 +41,8 @@ export interface FeedbackWidgetConfig {
   apiEndpoint?: string;
   /** API endpoint for feedback rounds */
   roundsEndpoint?: string;
+  /** API endpoint for general feedback */
+  generalFeedbackEndpoint?: string;
   /** Position of the floating button */
   position?: "bottom-left" | "bottom-right" | "top-left" | "top-right";
   /** Theme colors */
@@ -58,11 +70,17 @@ export interface FeedbackWidgetConfig {
     rounds?: string;
     noRounds?: string;
     viewAll?: string;
+    generalFeedback?: string;
+    noGeneralFeedback?: string;
+    addGeneralFeedback?: string;
+    generalPlaceholder?: string;
   };
   /** Disable the widget */
   disabled?: boolean;
   /** Show rounds panel button */
   showRoundsButton?: boolean;
+  /** Show general feedback button */
+  showGeneralFeedback?: boolean;
   /** URL to feedback overview page */
   feedbackPageUrl?: string | null;
   /** Z-index for the widget */
@@ -71,6 +89,8 @@ export interface FeedbackWidgetConfig {
   onFeedbackAdd?: (feedback: FeedbackPoint) => void;
   /** Callback when feedback is deleted */
   onFeedbackDelete?: (id: string) => void;
+  /** Callback when general feedback is added */
+  onGeneralFeedbackAdd?: (feedback: GeneralFeedback) => void;
 }
 
 // ============================================================================
@@ -80,6 +100,7 @@ export interface FeedbackWidgetConfig {
 const defaultConfig: Required<FeedbackWidgetConfig> = {
   apiEndpoint: "/api/feedback",
   roundsEndpoint: "/api/feedback/rounds",
+  generalFeedbackEndpoint: "/api/feedback/general",
   position: "bottom-left",
   theme: {
     primary: "#3b82f6",
@@ -104,13 +125,19 @@ const defaultConfig: Required<FeedbackWidgetConfig> = {
     rounds: "Feedback Rounds",
     noRounds: "No rounds found",
     viewAll: "View all feedback",
+    generalFeedback: "General Feedback",
+    noGeneralFeedback: "No general feedback yet",
+    addGeneralFeedback: "Add Feedback",
+    generalPlaceholder: "Share your thoughts or suggestions...",
   },
   disabled: false,
   showRoundsButton: true,
+  showGeneralFeedback: true,
   feedbackPageUrl: "/feedback",
   zIndex: 99999,
   onFeedbackAdd: () => {},
   onFeedbackDelete: () => {},
+  onGeneralFeedbackAdd: () => {},
 };
 
 // ============================================================================
@@ -380,6 +407,12 @@ const Icons = {
       <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
     </svg>
   ),
+  general: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
+      <path d="M7 7h10M7 11h10M7 15h6" />
+    </svg>
+  ),
   check: "✓",
   exclamation: "!",
 };
@@ -505,25 +538,31 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
   const {
     apiEndpoint,
     roundsEndpoint,
+    generalFeedbackEndpoint,
     position,
     theme,
     labels,
     disabled,
     showRoundsButton,
+    showGeneralFeedback,
     feedbackPageUrl,
     zIndex,
     onFeedbackAdd,
     onFeedbackDelete,
+    onGeneralFeedbackAdd,
   } = config;
 
   const [isActive, setIsActive] = useState(false);
   const [points, setPoints] = useState<FeedbackPoint[]>([]);
   const [rounds, setRounds] = useState<FeedbackRound[]>([]);
+  const [generalFeedbackList, setGeneralFeedbackList] = useState<GeneralFeedback[]>([]);
   const [visibleRounds, setVisibleRounds] = useState<Set<string>>(new Set());
   const [activePoint, setActivePoint] = useState<{ x: number; y: number } | null>(null);
   const [comment, setComment] = useState("");
+  const [generalComment, setGeneralComment] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const [showRoundPanel, setShowRoundPanel] = useState(false);
+  const [showGeneralPanel, setShowGeneralPanel] = useState(false);
   const [currentPage, setCurrentPage] = useState("");
 
   // Get current page path
@@ -566,6 +605,24 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
     };
     loadRounds();
   }, [roundsEndpoint, currentPage, disabled, showRoundsButton]);
+
+  // Load general feedback
+  useEffect(() => {
+    if (disabled || !currentPage || !showGeneralFeedback) return;
+
+    const loadGeneralFeedback = async () => {
+      try {
+        const res = await fetch(`${generalFeedbackEndpoint}?page=${encodeURIComponent(currentPage)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setGeneralFeedbackList(data.feedback || data || []);
+        }
+      } catch (e) {
+        console.error("[PointFeedback] Failed to load general feedback:", e);
+      }
+    };
+    loadGeneralFeedback();
+  }, [generalFeedbackEndpoint, currentPage, disabled, showGeneralFeedback]);
 
   const showToast = useCallback((message: string) => {
     setToast(message);
@@ -643,6 +700,48 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
       return next;
     });
   }, []);
+
+  const handleGeneralSubmit = useCallback(async () => {
+    if (!generalComment.trim()) return;
+
+    const feedback: GeneralFeedback = {
+      id: `gf_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      comment: generalComment.trim(),
+      page: currentPage,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      const res = await fetch(generalFeedbackEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(feedback),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const savedFeedback = data.feedback || feedback;
+        setGeneralFeedbackList((prev) => [savedFeedback, ...prev]);
+        setGeneralComment("");
+        showToast(labels.feedbackSaved!);
+        onGeneralFeedbackAdd?.(savedFeedback);
+      }
+    } catch (e) {
+      console.error("[PointFeedback] Failed to save general feedback:", e);
+    }
+  }, [generalComment, currentPage, generalFeedbackEndpoint, labels.feedbackSaved, showToast, onGeneralFeedbackAdd]);
+
+  const handleDeleteGeneralFeedback = useCallback(async (id: string) => {
+    try {
+      const res = await fetch(`${generalFeedbackEndpoint}?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setGeneralFeedbackList((prev) => prev.filter((f) => f.id !== id));
+        showToast(labels.feedbackDeleted!);
+      }
+    } catch (e) {
+      console.error("[PointFeedback] Failed to delete general feedback:", e);
+    }
+  }, [generalFeedbackEndpoint, labels.feedbackDeleted, showToast]);
 
   if (disabled) return null;
 
@@ -828,6 +927,66 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
         </div>
       )}
 
+      {/* General feedback panel */}
+      {showGeneralPanel && (
+        <div style={styles.panel(position, zIndex)} className="point-feedback-widget">
+          <div style={styles.panelHeader}>{labels.generalFeedback}</div>
+          <div style={{ padding: 12, borderBottom: "1px solid #e5e7eb" }}>
+            <textarea
+              value={generalComment}
+              onChange={(e) => setGeneralComment(e.target.value)}
+              placeholder={labels.generalPlaceholder}
+              style={{ ...styles.textarea, marginBottom: 8 }}
+              rows={3}
+            />
+            <button
+              onClick={handleGeneralSubmit}
+              disabled={!generalComment.trim()}
+              style={{
+                ...styles.submitButton(theme.primary!),
+                width: "100%",
+                opacity: generalComment.trim() ? 1 : 0.5,
+                cursor: generalComment.trim() ? "pointer" : "not-allowed",
+              }}
+            >
+              {labels.addGeneralFeedback}
+            </button>
+          </div>
+          <div style={styles.panelBody}>
+            {generalFeedbackList.length === 0 ? (
+              <p style={{ textAlign: "center", color: "#6b7280", padding: "20px 0", fontSize: 14 }}>
+                {labels.noGeneralFeedback}
+              </p>
+            ) : (
+              generalFeedbackList.map((feedback) => (
+                <div
+                  key={feedback.id}
+                  style={{
+                    padding: 12,
+                    backgroundColor: "#f9fafb",
+                    borderRadius: 8,
+                    marginBottom: 8,
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: 14, color: "#374151" }}>{feedback.comment}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+                    <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                      {new Date(feedback.timestamp).toLocaleString()}
+                    </span>
+                    <button
+                      style={styles.deleteButton}
+                      onClick={() => handleDeleteGeneralFeedback(feedback.id)}
+                    >
+                      {labels.delete}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Control buttons */}
       <div style={styles.buttonContainer(position, zIndex)} className="point-feedback-widget">
         <button
@@ -846,7 +1005,10 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
 
         {showRoundsButton && (
           <button
-            onClick={() => setShowRoundPanel(!showRoundPanel)}
+            onClick={() => {
+              setShowRoundPanel(!showRoundPanel);
+              setShowGeneralPanel(false);
+            }}
             style={styles.button(showRoundPanel ? "#059669" : theme.success!)}
             title={labels.rounds}
             onMouseOver={(e) => {
@@ -857,6 +1019,25 @@ export function FeedbackWidget(props: FeedbackWidgetConfig = {}) {
             }}
           >
             {Icons.rounds}
+          </button>
+        )}
+
+        {showGeneralFeedback && (
+          <button
+            onClick={() => {
+              setShowGeneralPanel(!showGeneralPanel);
+              setShowRoundPanel(false);
+            }}
+            style={styles.button(showGeneralPanel ? "#7c3aed" : "#8b5cf6")}
+            title={labels.generalFeedback}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "scale(1.05)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            {Icons.general}
           </button>
         )}
 

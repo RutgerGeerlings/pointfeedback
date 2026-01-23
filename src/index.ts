@@ -3,4 +3,5 @@ export type {
   FeedbackWidgetConfig,
   FeedbackPoint,
   FeedbackRound,
+  GeneralFeedback,
 } from "./components/FeedbackWidget";
