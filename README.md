@@ -2,7 +2,7 @@
 
 A beautiful, zero-dependency visual feedback widget for Next.js applications. Let users click anywhere on your page to drop feedback pins with comments.
 
-![Point Feedback Demo](https://raw.githubusercontent.com/yourusername/point-feedback/main/demo.gif)
+![Point Feedback Demo](https://raw.githubusercontent.com/RutgerGeerlings/pointfeedback/main/demo.gif)
 
 ## Features
 
@@ -414,7 +414,7 @@ export const { GET, POST, PUT, DELETE } = handler;
 
 ## License
 
-MIT © [Your Name]
+MIT © Rutger Geerlings
 
 ---
 

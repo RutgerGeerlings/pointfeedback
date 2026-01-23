@@ -1,7 +1,7 @@
 {
-  "name": "point-feedback",
+  "name": "pointfeedback",
   "version": "1.0.0",
-  "description": "Visual feedback widget for Next.js - click anywhere to drop feedback pins with comments",
+  "description": "Drop feedback pins anywhere on your Next.js app. A visual, collaborative feedback widget for design reviews, QA, and client feedback.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -23,12 +23,11 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint src/",
     "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/point-feedback"
+    "url": "git+https://github.com/RutgerGeerlings/pointfeedback.git"
   },
   "keywords": [
     "nextjs",
@@ -38,17 +37,17 @@
     "visual-feedback",
     "annotations",
     "collaboration",
-    "review",
+    "design-review",
+    "qa",
     "comments",
-    "pins",
-    "markers"
+    "pins"
   ],
-  "author": "",
+  "author": "Rutger Geerlings",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yourusername/point-feedback/issues"
+    "url": "https://github.com/RutgerGeerlings/pointfeedback/issues"
   },
-  "homepage": "https://github.com/yourusername/point-feedback#readme",
+  "homepage": "https://github.com/RutgerGeerlings/pointfeedback#readme",
   "peerDependencies": {
     "next": ">=13.0.0",
     "react": ">=18.0.0",
