@@ -2,7 +2,32 @@
 
 A beautiful, zero-dependency visual feedback widget for Next.js applications. Let users click anywhere on your page to drop feedback pins with comments.
 
-![Point Feedback Demo](https://raw.githubusercontent.com/RutgerGeerlings/pointfeedback/main/demo.gif)
+## Screenshots
+
+### Widget Controls
+Four floating buttons give quick access to all feedback features.
+
+![Widget Buttons](./assets/widget-buttons.svg)
+
+### Pinned Feedback
+Click anywhere on the page to pin feedback to a specific location. Hover to see details.
+
+![Pinned Feedback](./assets/pinned-feedback.svg)
+
+### Resolved Feedback
+Track resolutions with color-coded markers and solution notes.
+
+![Resolved Feedback](./assets/resolved-feedback.svg)
+
+### General Feedback
+Collect thoughts and suggestions that aren't tied to specific locations.
+
+![General Feedback](./assets/general-feedback.svg)
+
+### Feedback Rounds
+Organize feedback into rounds for structured design reviews and QA cycles.
+
+![Feedback Rounds](./assets/feedback-rounds.svg)
 
 ## Features
 

@@ -1,0 +1,36 @@
+<svg width="340" height="380" viewBox="0 0 340 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Panel Shadow -->
+  <g filter="drop-shadow(0 4px 20px rgba(0,0,0,0.15))">
+    <!-- Panel Background -->
+    <rect x="20" y="20" width="300" height="340" rx="12" fill="white"/>
+
+    <!-- Header -->
+    <rect x="20" y="20" width="300" height="44" rx="12" fill="#111827"/>
+    <rect x="20" y="52" width="300" height="12" fill="#111827"/>
+    <text x="36" y="49" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="white" font-weight="600">General Feedback</text>
+
+    <!-- Input Area -->
+    <rect x="32" y="76" width="276" height="70" rx="8" fill="white" stroke="#e5e7eb"/>
+    <text x="44" y="98" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#9ca3af">Share your thoughts or suggestions...</text>
+
+    <!-- Submit Button -->
+    <rect x="32" y="154" width="276" height="40" rx="8" fill="#3b82f6"/>
+    <text x="170" y="180" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="white" font-weight="500" text-anchor="middle">Add Feedback</text>
+
+    <!-- Divider -->
+    <line x1="20" y1="206" x2="320" y2="206" stroke="#e5e7eb"/>
+
+    <!-- Feedback Item 1 -->
+    <rect x="32" y="218" width="276" height="72" rx="8" fill="#f9fafb"/>
+    <text x="44" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">Love the new dashboard layout!</text>
+    <text x="44" y="258" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">Very intuitive and clean.</text>
+    <text x="44" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#9ca3af">Jan 23, 2026, 10:30 AM</text>
+    <text x="276" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#ef4444" font-weight="500">Delete</text>
+
+    <!-- Feedback Item 2 -->
+    <rect x="32" y="298" width="276" height="52" rx="8" fill="#f9fafb"/>
+    <text x="44" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">Could use dark mode support.</text>
+    <text x="44" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#9ca3af">Jan 22, 2026, 4:15 PM</text>
+    <text x="276" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#ef4444" font-weight="500">Delete</text>
+  </g>
+</svg>
