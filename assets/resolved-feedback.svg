@@ -1,0 +1,35 @@
+<svg width="420" height="220" viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background simulating a webpage -->
+  <rect width="420" height="220" fill="#f1f5f9"/>
+  <rect x="20" y="20" width="380" height="40" rx="4" fill="#e2e8f0"/>
+  <rect x="30" y="32" width="80" height="16" rx="2" fill="#cbd5e1"/>
+  <rect x="20" y="80" width="180" height="12" rx="2" fill="#e2e8f0"/>
+  <rect x="20" y="100" width="160" height="12" rx="2" fill="#e2e8f0"/>
+  <rect x="20" y="120" width="140" height="12" rx="2" fill="#e2e8f0"/>
+
+  <!-- Resolved Feedback Pin (Green) -->
+  <circle cx="100" cy="95" r="14" fill="#22c55e" stroke="white" stroke-width="3" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"/>
+  <path d="M94 95l4 4 8-8" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Tooltip Card -->
+  <g filter="drop-shadow(0 4px 12px rgba(0,0,0,0.15))">
+    <rect x="130" y="25" width="260" height="170" rx="12" fill="white"/>
+
+    <!-- Header -->
+    <path d="M130 37a12 12 0 0112-12h236a12 12 0 0112 12v20H130z" fill="#22c55e"/>
+    <text x="145" y="47" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="white" font-weight="600">Resolved</text>
+
+    <!-- Body -->
+    <text x="145" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">Button contrast is too low.</text>
+
+    <!-- Resolution Box -->
+    <rect x="145" y="95" width="230" height="60" rx="8" fill="#f0fdf4"/>
+    <text x="157" y="115" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#15803d" font-weight="600">Resolution:</text>
+    <text x="157" y="135" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#166534">Increased contrast ratio to 4.5:1</text>
+    <text x="157" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#166534">as per WCAG guidelines.</text>
+
+    <!-- Footer -->
+    <line x1="130" y1="168" x2="390" y2="168" stroke="#e5e7eb"/>
+    <text x="145" y="187" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Jan 20, 2026, 11:00 AM</text>
+  </g>
+</svg>

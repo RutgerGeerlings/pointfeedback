@@ -1,0 +1,46 @@
+<svg width="340" height="320" viewBox="0 0 340 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Panel Shadow -->
+  <g filter="drop-shadow(0 4px 20px rgba(0,0,0,0.15))">
+    <!-- Panel Background -->
+    <rect x="20" y="20" width="300" height="280" rx="12" fill="white"/>
+
+    <!-- Header -->
+    <path d="M20 32a12 12 0 0112-12h276a12 12 0 0112 12v32H20z" fill="#111827"/>
+    <text x="36" y="49" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="white" font-weight="600">Feedback Rounds</text>
+
+    <!-- Round 1 - Active/Selected -->
+    <rect x="32" y="76" width="276" height="56" rx="8" fill="#f3f4f6"/>
+    <!-- Checkbox checked -->
+    <rect x="44" y="94" width="18" height="18" rx="4" fill="#3b82f6"/>
+    <path d="M49 103l3 3 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="74" y="102" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#111827" font-weight="500">Design Review v2</text>
+    <!-- Badge - Active -->
+    <rect x="196" y="90" width="52" height="20" rx="4" fill="#fef3c7"/>
+    <text x="222" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#d97706" font-weight="500" text-anchor="middle">active</text>
+    <text x="74" y="120" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#6b7280">8 items</text>
+
+    <!-- Round 2 - Completed -->
+    <rect x="32" y="140" width="276" height="56" rx="8" fill="white"/>
+    <!-- Checkbox unchecked -->
+    <rect x="44" y="158" width="18" height="18" rx="4" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+    <text x="74" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#111827" font-weight="500">QA Round 1</text>
+    <!-- Badge - Completed -->
+    <rect x="172" y="154" width="76" height="20" rx="4" fill="#dcfce7"/>
+    <text x="210" y="168" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#16a34a" font-weight="500" text-anchor="middle">completed</text>
+    <text x="74" y="184" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#6b7280">12 items</text>
+
+    <!-- Round 3 - Archived -->
+    <rect x="32" y="204" width="276" height="56" rx="8" fill="white"/>
+    <!-- Checkbox unchecked -->
+    <rect x="44" y="222" width="18" height="18" rx="4" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+    <text x="74" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#111827" font-weight="500">Initial Feedback</text>
+    <!-- Badge - Archived -->
+    <rect x="188" y="218" width="60" height="20" rx="4" fill="#f3f4f6"/>
+    <text x="218" y="232" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280" font-weight="500" text-anchor="middle">archived</text>
+    <text x="74" y="248" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#6b7280">5 items</text>
+
+    <!-- Footer -->
+    <line x1="20" y1="268" x2="320" y2="268" stroke="#e5e7eb"/>
+    <text x="170" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#3b82f6" font-weight="500" text-anchor="middle">View all feedback →</text>
+  </g>
+</svg>
