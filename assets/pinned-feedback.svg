@@ -9,7 +9,7 @@
 
   <!-- Feedback Pin -->
   <circle cx="100" cy="95" r="14" fill="#3b82f6" stroke="white" stroke-width="3" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"/>
-  <text x="100" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">!</text>
+  <text x="100" y="100" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">!</text>
 
   <!-- Tooltip Card -->
   <g filter="drop-shadow(0 4px 12px rgba(0,0,0,0.15))">
@@ -17,15 +17,15 @@
 
     <!-- Header -->
     <path d="M130 57a12 12 0 0112-12h236a12 12 0 0112 12v20H130z" fill="#3b82f6"/>
-    <text x="145" y="67" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="white" font-weight="600">New Feedback</text>
+    <text x="145" y="67" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="600">New Feedback</text>
 
     <!-- Body -->
-    <text x="145" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">The button contrast is too low,</text>
-    <text x="145" y="118" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#374151">hard to read on mobile devices.</text>
+    <text x="145" y="100" font-family="Arial, sans-serif" font-size="13" fill="#374151">The button contrast is too low,</text>
+    <text x="145" y="118" font-family="Arial, sans-serif" font-size="13" fill="#374151">hard to read on mobile devices.</text>
 
     <!-- Footer -->
     <line x1="130" y1="130" x2="390" y2="130" stroke="#e5e7eb"/>
-    <text x="145" y="147" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Jan 23, 2026, 2:45 PM</text>
-    <text x="320" y="147" font-family="Arial, sans-serif" font-size="11" fill="#ef4444" font-weight="bold">Delete</text>
+    <text x="145" y="147" font-family="Arial, sans-serif" font-size="11" fill="#6b7280">Jan 23, 2026, 2:45 PM</text>
+    <text x="350" y="147" font-family="Arial, sans-serif" font-size="11" fill="#ef4444" font-weight="bold">Delete</text>
   </g>
 </svg>
