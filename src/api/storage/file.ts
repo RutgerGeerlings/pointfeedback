@@ -6,9 +6,18 @@ import type { StorageAdapter, FeedbackPoint, FeedbackRound } from "../handlers";
  * File-based storage adapter
  * Stores feedback in JSON files on the local filesystem
  *
+ * WARNING: This storage adapter does NOT work on serverless platforms like Vercel,
+ * Netlify, or AWS Lambda. The filesystem is read-only and ephemeral in these environments.
+ * For production deployments on Vercel, use createVercelBlobStorage instead.
+ *
+ * Best for:
+ * - Local development
+ * - Self-hosted servers with persistent filesystem
+ * - Docker containers with mounted volumes
+ *
  * Usage:
  * ```ts
- * import { createFileStorage } from "point-feedback/api";
+ * import { createFileStorage } from "pointfeedback/api";
  *
  * const storage = createFileStorage({
  *   feedbackDir: "./data/feedback",

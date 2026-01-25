@@ -179,6 +179,15 @@ That's it! You now have a working feedback system with both pinned and general f
 
 ## Storage Adapters
 
+Choose the right storage adapter for your deployment environment:
+
+| Storage | Best For | Persistence | Serverless Compatible |
+|---------|----------|-------------|----------------------|
+| Memory | Development, testing | None (lost on restart) | Yes |
+| File | Self-hosted, Docker | Persistent | **No** |
+| Vercel Blob | Vercel deployments | Persistent | Yes |
+| Custom | Any database | Depends | Yes |
+
 ### Memory Storage (Default)
 
 Perfect for development and testing. Data is lost on server restart.
@@ -193,6 +202,8 @@ export const POST = feedbackHandler.POST;
 ### File Storage
 
 Stores feedback in JSON files on the local filesystem.
+
+> **Warning**: File storage does NOT work on serverless platforms (Vercel, Netlify, AWS Lambda). The filesystem is read-only and ephemeral. Use Vercel Blob or a database for production.
 
 ```ts
 import { createFeedbackHandler, createFileStorage } from "pointfeedback/api";
@@ -210,7 +221,7 @@ export const PUT = handler.PUT;
 export const DELETE = handler.DELETE;
 ```
 
-### Vercel Blob Storage
+### Vercel Blob Storage (Recommended for Vercel)
 
 For production deployments on Vercel. Requires `@vercel/blob`.
 
