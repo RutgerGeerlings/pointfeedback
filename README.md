@@ -41,6 +41,30 @@ Organize feedback into rounds for structured design reviews and QA cycles.
 - **Fully Customizable**: Themes, labels, position, and behavior are all configurable
 - **Storage Adapters**: Built-in support for memory, file system, and Vercel Blob storage
 
+## Demo
+
+Try it locally with the included Next.js demo — a full landing page where the widget is **live and interactive**:
+
+```bash
+# Build the package first (the demo links to the local source)
+npm install
+npm run build
+
+# Then run the demo
+cd examples/nextjs-demo
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see the widget in action. The landing page includes:
+
+- **Interactive demo** — the feedback widget is live on the page, drop pins anywhere
+- **Feature overview** — click-to-pin, general feedback, rounds, page-scoping, and more
+- **Code examples** — tabbed snippets for quick start, customization, and storage backends
+- **Storage comparison** — side-by-side table of all supported backends
+
+Navigate to `/dashboard` or `/settings` to see page-scoped feedback filtering. The demo uses in-memory storage — no database or credentials needed.
+
 ## Installation
 
 ```bash
