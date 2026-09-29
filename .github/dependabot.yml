@@ -1,0 +1,22 @@
+# Deps-beleid Stratalytic. Wekelijks, patch+minor gegroepeerd, majors apart.
+# open-pull-requests-limit 0 = alleen security updates.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Amsterdam
+    open-pull-requests-limit: 0
+    groups:
+      minor-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+      security-minor-patch:
+        applies-to: security-updates
+        update-types: [minor, patch]
+    commit-message:
+      prefix: deps
