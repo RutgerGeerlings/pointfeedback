@@ -1,0 +1,44 @@
+# Secret-scan met gitleaks op elke push en pull request (ISO 27001, Annex A 8.12 en 8.28).
+# Compenseert dat GitHub secret scanning niet beschikbaar is op private repo's van een persoonlijk account.
+# Scant de volledige git-historie. Bekende vals-positieven: fingerprint in .gitleaksignore (repo-root),
+# eigen regels in .gitleaks.toml (repo-root); gitleaks leest beide zelf.
+# Gitleaks-CLI (MIT) op een vaste versie met checksum-controle, geen licentieplichtige action.
+name: gitleaks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gitleaks:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks installeren
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz -C "$RUNNER_TEMP" gitleaks
+          rm gitleaks.tar.gz
+      - name: Gitleaks scan (volledige historie, geredigeerd)
+        run: |
+          if [ -f .gitleaks.toml ]; then
+            "$RUNNER_TEMP/gitleaks" git --redact -v --config .gitleaks.toml .
+          else
+            "$RUNNER_TEMP/gitleaks" git --redact -v .
+          fi
